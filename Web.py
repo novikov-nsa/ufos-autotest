@@ -18,31 +18,31 @@ class Operation(object):
 
         if typeOperation=='Зайти под пользователем':
             Operation().opLogin(setOperation)
-            resaultOperation = 'Ок'
+            resaultOperation = '[Операция выполнена -] ' + typeOperation
 
         if typeOperation=='Открыть в меню навигации':
             Operation().opMenuNavigator(setOperation)
-            resaultOperation = 'Ок'
+            resaultOperation = '[Операция выполнена -] ' + typeOperation
 
         if typeOperation=='Кнопка на скроллере':
             Operation().opKeyScroller(setOperation)
-            resaultOperation = 'Ок'
+            resaultOperation = '[Операция выполнена -] ' + typeOperation
 
         if typeOperation=='Выбрать из списка':
             Operation().opSetlListBox(setOperation)
-            resaultOperation = 'Ок'
+            resaultOperation = '[Операция выполнена -] ' + typeOperation
 
         if typeOperation=='Выбрать из справочника':
             Operation().opSetDict(setOperation)
-            resaultOperation = 'Ок'
+            resaultOperation = '[Операция выполнена -] ' + typeOperation
 
         if typeOperation=='Перейти на закладку':
             Operation().opGoToTabPanel(setOperation)
-            resaultOperation = 'Ок'
+            resaultOperation = '[Операция выполнена -] ' + typeOperation
 
         if typeOperation=='Установить чекер':
             Operation().opCheckTrue(setOperation)
-            resaultOperation = 'Ок'
+            resaultOperation = '[Операция выполнена -] ' + typeOperation
 
 
         return resaultOperation
@@ -64,7 +64,8 @@ class Operation(object):
         driver.get("http://depr-dev-jetty.otr.ru:28080/")
 
     #Ожидание появления поля
-        waitElementID("user")
+        waitElement("user", reqType='ID')
+
     #Ввод значения
         driver.find_element_by_id("user").clear()
         driver.find_element_by_id("user").send_keys(userLogin)
@@ -90,7 +91,7 @@ class Operation(object):
             if menuItem[0]!='*':
                 xpathSt = "//tr[@class='z-treerow'][@title='" + menuItem + "']"
 
-            waitElementXpath(xpathSt)
+            waitElement(xpathSt)
             elemNavigation = driver.find_element_by_xpath(xpathSt)
             elemNavigation.click()
 
@@ -106,7 +107,7 @@ class Operation(object):
             if nameParam == 'Название': keyName = spParam[1]
 
         xpathSt="//button[@title='" + keyName + "']"
-        waitElementXpath(xpathSt)
+        waitElement(xpathSt)
         driver.find_element_by_xpath(xpathSt).click()
 
 
@@ -124,11 +125,12 @@ class Operation(object):
 
         #Нажать кнопку выбора
         xpathSt = sysKeyName
-        waitElementName(xpathSt)
+        #waitElementName(xpathSt)
+        waitElement(xpathSt, reqType='NAME')
         driver.find_element_by_name(xpathSt).click()
 
         #Выбрать первый попавшийся элемент
-        waitElementXpath("//span[@class='z-comboitem-text']")
+        waitElement("//span[@class='z-comboitem-text']")
         driver.find_element_by_xpath("//span[@class='z-comboitem-text']").click()
 
     def opSetDict(self,setOperation):
@@ -154,24 +156,24 @@ class Operation(object):
                 if dictValue[0] == '~': xpathStDict = "//div[@class='z-listcell-content'][contains(text(), '" + dictValue[1:] + "')]"
 
 
-        waitElementXpath(xpathSt)
+        waitElement(xpathSt)
         driver.find_element_by_xpath(xpathSt).click()
 
         #print(xpathStDict)
 
         if dictValue != 'Выбрать любое значение':
-            waitElementXpath(xpathStDict)
+            waitElement(xpathStDict)
             elem = driver.find_element_by_xpath(xpathStDict)
             ActionChains(driver).move_to_element(elem).click(elem).perform()
 
         if dictValue == 'Выбрать любое значение':
             # Не работает
-            waitElementXpath(xpathStDict)
+            waitElement(xpathStDict)
             elem = driver.find_element_by_xpath(xpathStDict)
             ActionChains(driver).move_to_element(elem).click(elem).perform()
 
 
-        waitElementXpath("//button[text()='OK']")
+        waitElement("//button[text()='OK']")
         driver.find_element_by_xpath("//button[text()='OK']").click()
 
 
@@ -191,9 +193,8 @@ class Operation(object):
         xpathSt = "//span[text()='" + panName + "']/parent::a/parent::li[@class='z-tab']"
         xpathSt2 = "//span[text()='" + panName + "']"
 
-        print(xpathSt2)
-        waitElementXpath(xpathSt)
-        waitElementXpath(xpathSt2)
+        waitElement(xpathSt)
+        waitElement(xpathSt2)
         elem = driver.find_element_by_xpath(xpathSt2)
         ActionChains(driver).move_to_element(elem).click(elem).perform()
 
@@ -211,7 +212,7 @@ class Operation(object):
 
         xpathSt = "//input[@name='" + elemName + "']/following-sibling::div"
 
-        waitElementXpath(xpathSt)
+        waitElement(xpathSt)
         elem = driver.find_element_by_xpath(xpathSt)
         ActionChains(driver).move_to_element(elem).click(elem).perform()
 
@@ -219,11 +220,38 @@ class Operation(object):
     pass
 
 
-def waitElementXpath(x, timer=60):
-    WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.XPATH, x)))
+def waitElement(reqText, reqType='XPATH',timer=60 ,typeSearch = 'presence_of_element_located'):
+#Проверка наличия индикатора ожидания обработки страницы
+#Если найден элемент //div[@class='z-loading-indicator'] ожидаем 60 сек. пока он пропадет
+    try:
+        WebDriverWait(driver, 1.1).until(EC.presence_of_element_located((By.XPATH, "//div[@class='z-loading-indicator']")))
+    except Exception: x=1
+    else:
+        for i in range(60):
+            try:
+                time.sleep(1)
+                WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, "//div[@class='z-loading-indicator']")))
+            except Exception: break
+            else: print("[Ожидание обработки страницы ]", i, "сек")
+        if i==60:
+            print("[error] Превышено время ожидания")
+            exit(10)
 
-def waitElementID(x, timer=60):
-    WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.ID, x)))
+#Проверяем наличие элемента
+    try:
+        if typeSearch == 'presence_of_element_located':
+            if reqType == 'XPATH': WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.XPATH, reqText)))
+            if reqType == 'ID': WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.ID, reqText)))
+            if reqType == 'NAME': WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.NAME, reqText)))
+    except Exception:
+        waitResault='[error] Элемент, не найден "' + reqText + '"'
+        print(waitResault)
+        exit(10)
+    else:
+        waitResault = '[Элемент Найден] "' + reqText + '"'
+        print(waitResault)
 
-def waitElementName(x, timer=60):
-    WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.NAME, x)))
+
+
+
+
