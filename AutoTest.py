@@ -14,8 +14,9 @@ if __name__ == "__main__":
             print("Файл " + filename + " не найден")
             exit(12)
     else:
-        print("Имя файла шаблона не указано")
-        exit(13)
+        filename = './Шаблоны/D01_S_000_000.xlsm'
+#        print("Имя файла шаблона не указано")
+#        exit(13)
 
 #'./Шаблоны/D01_S_000_000.xlsm'
 stepList = UtilExcelRead.WorkExcel().readStepList(filename)
