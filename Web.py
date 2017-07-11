@@ -255,3 +255,4 @@ def waitElement(reqText, reqType='XPATH',timer=60 ,typeSearch = 'presence_of_ele
 
 
 
+
