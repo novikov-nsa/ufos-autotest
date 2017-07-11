@@ -16,33 +16,14 @@ class Operation(object):
         print(nameOperation,typeOperation)
         resaultOperation = 'Начало выполнения'
 
-        if typeOperation=='Зайти под пользователем':
-            Operation().opLogin(setOperation)
-            resaultOperation = '[Операция выполнена -] ' + typeOperation
+        if typeOperation=='Зайти под пользователем':    resaultOperation = Operation().opLogin(setOperation)
+        if typeOperation=='Открыть в меню навигации':   resaultOperation = Operation().opMenuNavigator(setOperation)
+        if typeOperation=='Кнопка на скроллере':        resaultOperation = Operation().opKeyScroller(setOperation)
+        if typeOperation=='Выбрать из списка':          resaultOperation = Operation().opSetlListBox(setOperation)
+        if typeOperation=='Выбрать из справочника':     resaultOperation = Operation().opSetDict(setOperation)
+        if typeOperation=='Перейти на закладку':        resaultOperation = Operation().opGoToTabPanel(setOperation)
+        if typeOperation=='Установить чекер':           resaultOperation = Operation().opCheckTrue(setOperation)
 
-        if typeOperation=='Открыть в меню навигации':
-            Operation().opMenuNavigator(setOperation)
-            resaultOperation = '[Операция выполнена -] ' + typeOperation
-
-        if typeOperation=='Кнопка на скроллере':
-            Operation().opKeyScroller(setOperation)
-            resaultOperation = '[Операция выполнена -] ' + typeOperation
-
-        if typeOperation=='Выбрать из списка':
-            Operation().opSetlListBox(setOperation)
-            resaultOperation = '[Операция выполнена -] ' + typeOperation
-
-        if typeOperation=='Выбрать из справочника':
-            Operation().opSetDict(setOperation)
-            resaultOperation = '[Операция выполнена -] ' + typeOperation
-
-        if typeOperation=='Перейти на закладку':
-            Operation().opGoToTabPanel(setOperation)
-            resaultOperation = '[Операция выполнена -] ' + typeOperation
-
-        if typeOperation=='Установить чекер':
-            Operation().opCheckTrue(setOperation)
-            resaultOperation = '[Операция выполнена -] ' + typeOperation
 
 
         return resaultOperation
@@ -73,6 +54,9 @@ class Operation(object):
         driver.find_element_by_id("psw").send_keys(userPassword)
         driver.find_element_by_id("okButton").click()
 
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
+
     def opMenuNavigator(self,setOperation):
         # Операция "Открыть в меню навигации"
         # Возможные параметры
@@ -95,6 +79,9 @@ class Operation(object):
             elemNavigation = driver.find_element_by_xpath(xpathSt)
             elemNavigation.click()
 
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
+
     def opKeyScroller(self,setOperation):
     # Операция "Кнопка на скроллере"
     # Возможные параметры
@@ -109,6 +96,9 @@ class Operation(object):
         xpathSt="//button[@title='" + keyName + "']"
         waitElement(xpathSt)
         driver.find_element_by_xpath(xpathSt).click()
+
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
 
 
     def opSetlListBox(self,setOperation):
@@ -132,6 +122,9 @@ class Operation(object):
         #Выбрать первый попавшийся элемент
         waitElement("//span[@class='z-comboitem-text']")
         driver.find_element_by_xpath("//span[@class='z-comboitem-text']").click()
+
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
 
     def opSetDict(self,setOperation):
     # Операция "Выбрать из справочника"
@@ -176,6 +169,8 @@ class Operation(object):
         waitElement("//button[text()='OK']")
         driver.find_element_by_xpath("//button[text()='OK']").click()
 
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
 
     def opGoToTabPanel(self,setOperation):
     # Операция "Перейти на закладку"
@@ -198,6 +193,9 @@ class Operation(object):
         elem = driver.find_element_by_xpath(xpathSt2)
         ActionChains(driver).move_to_element(elem).click(elem).perform()
 
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
+
     def opCheckTrue(self,setOperation):
     # Операция "Установить чекер"
     # Возможные параметры
@@ -215,6 +213,9 @@ class Operation(object):
         waitElement(xpathSt)
         elem = driver.find_element_by_xpath(xpathSt)
         ActionChains(driver).move_to_element(elem).click(elem).perform()
+
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
 
 
     pass
