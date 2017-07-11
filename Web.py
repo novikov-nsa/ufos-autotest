@@ -220,6 +220,7 @@ class Operation(object):
     pass
 
 
+
 def waitElement(reqText, reqType='XPATH',timer=60 ,typeSearch = 'presence_of_element_located'):
 #Проверка наличия индикатора ожидания обработки страницы
 #Если найден элемент //div[@class='z-loading-indicator'] ожидаем 60 сек. пока он пропадет
