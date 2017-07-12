@@ -16,15 +16,14 @@ class Operation(object):
         print(nameOperation,typeOperation)
         resaultOperation = 'Начало выполнения'
 
-        if typeOperation=='Зайти под пользователем':    resaultOperation = Operation().opLogin(setOperation)
-        if typeOperation=='Открыть в меню навигации':   resaultOperation = Operation().opMenuNavigator(setOperation)
-        if typeOperation=='Кнопка на скроллере':        resaultOperation = Operation().opKeyScroller(setOperation)
-        if typeOperation=='Выбрать из списка':          resaultOperation = Operation().opSetlListBox(setOperation)
-        if typeOperation=='Выбрать из справочника':     resaultOperation = Operation().opSetDict(setOperation)
-        if typeOperation=='Перейти на закладку':        resaultOperation = Operation().opGoToTabPanel(setOperation)
-        if typeOperation=='Установить чекер':           resaultOperation = Operation().opCheckTrue(setOperation)
-
-
+        if typeOperation=='Зайти под пользователем':       resaultOperation = Operation().opLogin(setOperation)
+        if typeOperation=='Открыть в меню навигации':      resaultOperation = Operation().opMenuNavigator(setOperation)
+        if typeOperation=='Кнопка на скроллере':           resaultOperation = Operation().opKeyScroller(setOperation)
+        if typeOperation=='Выбрать из списка':             resaultOperation = Operation().opSetlListBox(setOperation)
+        if typeOperation=='Выбрать из справочника':        resaultOperation = Operation().opSetDict(setOperation)
+        if typeOperation=='Перейти на закладку':           resaultOperation = Operation().opGoToTabPanel(setOperation)
+        if typeOperation=='Установить чекер':              resaultOperation = Operation().opCheckTrue(setOperation)
+        if typeOperation == 'Кнопка на тулбаре документа': resaultOperation = Operation().opCheckTrue(setOperation)
 
         return resaultOperation
 
@@ -213,6 +212,24 @@ class Operation(object):
         waitElement(xpathSt)
         elem = driver.find_element_by_xpath(xpathSt)
         ActionChains(driver).move_to_element(elem).click(elem).perform()
+
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
+
+    def opKeyDocToolbar(self,setOperation):
+    # Операция "Кнопка на тулбаре документа"
+    # Возможные параметры
+    # Название
+
+    # Выставить параметры
+        for itemParam in setOperation:
+            spParam=itemParam.split('=')
+            nameParam=spParam[0]
+            if nameParam == 'Название': keyName = spParam[1]
+
+        xpathSt="//button[@title='" + keyName + "']"
+        waitElement(xpathSt)
+        driver.find_element_by_xpath(xpathSt).click()
 
         resaultOperation = '[Операция выполнена -] ' + setOperation[1]
         return resaultOperation
