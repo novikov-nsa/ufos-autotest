@@ -313,7 +313,7 @@ class Operation(object):
 
         element = driver.find_elements_by_xpath(xpathSt)
         # ActionChains(driver).move_to_element(element).click(element).perform()
-        if posKey == '1': ActionChains(driver).move_to_element(element).click(element).perform()
+        if posKey == '1': driver.find_element_by_xpath(xpathSt).click()
         if posKey == '2': ActionChains(driver).move_to_element(element[1]).click(element[1]).perform()
 
         resaultOperation = '[Операция выполнена -] ' + setOperation[1]
