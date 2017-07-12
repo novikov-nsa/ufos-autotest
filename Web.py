@@ -273,8 +273,10 @@ class Operation(object):
             nameParam=spParam[0]
             if nameParam == 'Дочерний документ': posKey = '2'
 
-        xpathSt="//button[@title='Сохранить изменения и закрыть окно' and position()=" + posKey + "']"
+        xpathSt="//button[@title='Сохранить изменения и закрыть окно']"
+
         waitElement(xpathSt)
+        driver.find_elementS_by_xpath(xpathSt)
 
         resaultOperation = '[Операция выполнена -] ' + setOperation[1]
         return resaultOperation
