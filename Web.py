@@ -276,7 +276,7 @@ class Operation(object):
         xpathSt="//button[@title='Сохранить изменения и закрыть окно']"
 
         waitElement(xpathSt)
-        driver.find_elementS_by_xpath(xpathSt)
+        driver.find_element_by_xpath(xpathSt)
 
         resaultOperation = '[Операция выполнена -] ' + setOperation[1]
         return resaultOperation
