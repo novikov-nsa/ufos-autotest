@@ -16,15 +16,16 @@ class Operation(object):
         print(nameOperation,typeOperation)
         resaultOperation = 'Начало выполнения'
 
-        if typeOperation=='Зайти под пользователем':    resaultOperation = Operation().opLogin(setOperation)
-        if typeOperation=='Открыть в меню навигации':   resaultOperation = Operation().opMenuNavigator(setOperation)
-        if typeOperation=='Кнопка на скроллере':        resaultOperation = Operation().opKeyScroller(setOperation)
-        if typeOperation=='Выбрать из списка':          resaultOperation = Operation().opSetlListBox(setOperation)
-        if typeOperation=='Выбрать из справочника':     resaultOperation = Operation().opSetDict(setOperation)
-        if typeOperation=='Перейти на закладку':        resaultOperation = Operation().opGoToTabPanel(setOperation)
-        if typeOperation=='Установить чекер':           resaultOperation = Operation().opCheckTrue(setOperation)
-
-
+        if typeOperation == 'Зайти под пользователем':    resaultOperation = Operation().opLogin(setOperation)
+        if typeOperation == 'Открыть в меню навигации':   resaultOperation = Operation().opMenuNavigator(setOperation)
+        if typeOperation == 'Кнопка на скроллере':        resaultOperation = Operation().opKeyScroller(setOperation)
+        if typeOperation == 'Выбрать из списка':          resaultOperation = Operation().opSetlListBox(setOperation)
+        if typeOperation == 'Выбрать из справочника':     resaultOperation = Operation().opSetDict(setOperation)
+        if typeOperation == 'Перейти на закладку':        resaultOperation = Operation().opGoToTabPanel(setOperation)
+        if typeOperation == 'Установить чекер':           resaultOperation = Operation().opCheckTrue(setOperation)
+        if typeOperation == 'Установить радио кнопку':    resaultOperation = Operation().opCheckRadioBut(setOperation)
+        if typeOperation == 'Нажать кнопку':              resaultOperation = Operation().opButton(setOperation)
+        if typeOperation == 'Сохранить изменения и закрыть окно':   resaultOperation = Operation().opButtonSaveAndClose(setOperation)
 
         return resaultOperation
 
@@ -111,7 +112,7 @@ class Operation(object):
             spParam=itemParam.split('=')
             nameParam=spParam[0]
             if nameParam == 'Системное имя кнопки': sysKeyName = spParam[1]
-            if nameParam == 'Выбрать': selType = spParam[1]
+            if nameParam == 'Выбрать': selValue = spParam[1]
 
         #Нажать кнопку выбора
         xpathSt = sysKeyName
@@ -120,8 +121,10 @@ class Operation(object):
         driver.find_element_by_name(xpathSt).click()
 
         #Выбрать первый попавшийся элемент
-        waitElement("//span[@class='z-comboitem-text']")
-        driver.find_element_by_xpath("//span[@class='z-comboitem-text']").click()
+
+        xpathList = "//span[@class='z-comboitem-text'][contains(text(), '" + selValue + "')]"
+        waitElement(xpathList)
+        driver.find_element_by_xpath(xpathList).click()
 
         resaultOperation = '[Операция выполнена -] ' + setOperation[1]
         return resaultOperation
@@ -216,6 +219,68 @@ class Operation(object):
 
         resaultOperation = '[Операция выполнена -] ' + setOperation[1]
         return resaultOperation
+
+
+    def opCheckRadioBut(self,setOperation):
+    # Операция "Установить радио кнопку"
+    # Возможные параметры
+    # Системное имя
+
+    # Выставить параметры
+        for itemParam in setOperation:
+            spParam = itemParam.split('=')
+            nameParam = spParam[0]
+            if nameParam == 'Значение': elemValue = spParam[1]
+            if nameParam == 'Пауза': pauseVal = spParam[1]
+
+        xpathSt = "//label[text()='" + elemValue + "'][@class='z-advradio-content']"
+
+        waitElement(xpathSt)
+        elem = driver.find_element_by_xpath(xpathSt)
+        ActionChains(driver).move_to_element(elem).click(elem).perform()
+
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
+
+
+    def opButton(self,setOperation):
+    # Операция "Кнопка"
+    # Возможные параметры
+    # Название
+
+    # Выставить параметры
+        for itemParam in setOperation:
+            spParam=itemParam.split('=')
+            nameParam=spParam[0]
+            if nameParam == 'Название': keyName = spParam[1]
+
+        xpathSt="//button[text()='" + keyName + "']"
+        waitElement(xpathSt)
+        driver.find_element_by_xpath(xpathSt).click()
+
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
+
+    def opButtonSaveAndClose(self,setOperation):
+    # Операция "Кнопка"
+    # Возможные параметры
+    # Название
+
+    # Выставить параметры
+        posKey = '1'
+        for itemParam in setOperation:
+            spParam=itemParam.split('=')
+            nameParam=spParam[0]
+            if nameParam == 'Дочерний документ': posKey = '2'
+
+        xpathSt="//button[@title='Сохранить изменения и закрыть окно' and position()=" + posKey + "']"
+        waitElement(xpathSt)
+
+        resaultOperation = '[Операция выполнена -] ' + setOperation[1]
+        return resaultOperation
+
+
+
 
 
     pass
