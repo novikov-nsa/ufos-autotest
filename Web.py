@@ -7,7 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 
-driver = webdriver.Firefox()
+#driver = webdriver.Firefox()
+driver = webdriver.Chrome()
 
 class Operation(object):
     def toExecute(self,setOperation):
@@ -23,7 +24,7 @@ class Operation(object):
         if typeOperation=='Выбрать из справочника':        resaultOperation = Operation().opSetDict(setOperation)
         if typeOperation=='Перейти на закладку':           resaultOperation = Operation().opGoToTabPanel(setOperation)
         if typeOperation=='Установить чекер':              resaultOperation = Operation().opCheckTrue(setOperation)
-        if typeOperation == 'Кнопка на тулбаре документа': resaultOperation = Operation().opCheckTrue(setOperation)
+        if typeOperation == 'Кнопка на тулбаре документа': resaultOperation = Operation().opKeyDocToolbar(setOperation)
 
         return resaultOperation
 
