@@ -1,27 +1,33 @@
-import UtilExcelRead
+import Util
 import Web
-import sys
-import os
+
+filename = Util.WorkExcel().FileNameStartParam()
 
 
-#Проверка на наличие файла со списком операций. Файл передается как параметр.
-#Пример: python AuotoTest.py ./Шаблоны/D01_S_000_000.xlsm
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        filename = sys.argv[1]
-        if os.path.exists(filename):
-            print("Файл "+filename+" найден")
+def OperaionMainDef(filename,nameWorksheets):
+    # Получить список операций
+    stepList = Util.WorkExcel().readStepList(filename,nameWorksheets)
+
+    for operation in stepList:
+        print('nnnn' + operation[1])
+        if operation[1]=='Сценарий':
+            print('Запущен внешний сценарий')
+            for itemParam in operation:
+                spParam = itemParam.split('=')
+                nameParam = spParam[0]
+                if nameParam == 'Документ': documName = spParam[1]
+                if nameParam == 'Имя листа': nameWorksheets = spParam[1]
+            if documName == 'Текущий':
+                print(filename+ ' -' +nameWorksheets)
+                OperaionMainDef(filename, nameWorksheets)
         else:
-            print("Файл " + filename + " не найден")
-            exit(12)
-    else:
-        print("Имя файла шаблона не указано")
-        exit(13)
+            answerOperation = Web.Operation().toExecute(operation)
+        print(answerOperation)
 
-#Получить список операций
-stepList = UtilExcelRead.WorkExcel().readStepList(filename)
 
-#Выполнение операций
-for operation in stepList:
-    answerOperation = Web.Operation().toExecute(operation)
-    print(answerOperation)
+OperaionMainDef(filename,'Сценарий')
+
+
+
+
+

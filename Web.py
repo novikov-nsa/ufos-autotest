@@ -5,9 +5,18 @@ import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
 driver = webdriver.Firefox()
+
+
+#driver = webdriver.Remote(
+#   command_executor='http://192.168.1.36:4444/wd/hub',
+#    desired_capabilities={'browserName': 'chrome',
+#                          'javascriptEnabled': True})
+
+
 
 class Operation(object):
     def toExecute(self,setOperation):
@@ -37,24 +46,42 @@ class Operation(object):
     # Логин,Пароль
 
     # Выставить параметры
+        typePortal = "Без портала"
+    
         for itemParam in setOperation:
             spParam=itemParam.split('=')
             nameParam=spParam[0]
             if nameParam == 'Логин': userLogin = spParam[1]
             if nameParam == 'Пароль': userPassword = spParam[1]
+            if nameParam == 'Стенд': url = spParam[1]
+            if nameParam == 'Портал': typePortal = spParam[1]
 
     #Открыть в браузере
-        driver.get("http://depr-dev-jetty.otr.ru:28080/")
+        driver.get(url)
 
-    #Ожидание появления поля
-        waitElement("user", reqType='ID')
+        if typePortal == 'ДЭПР':
+            waitElement("IDToken1", reqType='ID')
 
-    #Ввод значения
-        driver.find_element_by_id("user").clear()
-        driver.find_element_by_id("user").send_keys(userLogin)
-        driver.find_element_by_id("psw").clear()
-        driver.find_element_by_id("psw").send_keys(userPassword)
-        driver.find_element_by_id("okButton").click()
+            driver.find_element_by_id("IDToken1").clear()
+            driver.find_element_by_id("IDToken1").send_keys(userLogin)
+            driver.find_element_by_id("IDToken2").clear()
+            driver.find_element_by_id("IDToken2").send_keys(userPassword)
+            driver.find_element_by_name("Login.Submit").click()
+
+            xpathList = "//a[contains(@class,'navbar-nav-a')][contains(text(), 'Тарифное регулирование')]"
+            waitElement(xpathList)
+            driver.find_element_by_xpath(xpathList).click()
+
+        if typePortal == 'Без портала':
+            #Ожидание появления поля
+            waitElement("user", reqType='ID')
+
+            #Ввод значения
+            driver.find_element_by_id("user").clear()
+            driver.find_element_by_id("user").send_keys(userLogin)
+            driver.find_element_by_id("psw").clear()
+            driver.find_element_by_id("psw").send_keys(userPassword)
+            driver.find_element_by_id("okButton").click()
 
         resaultOperation = '[Операция выполнена -] ' + setOperation[1]
         return resaultOperation
@@ -71,11 +98,11 @@ class Operation(object):
             if nameParam == 'Путь': menuStr = spParam[1]
 
         for menuItem in menuStr.split('/'):
+            # * Обозначение узла навигации
             if menuItem[0]=='*':
-                xpathSt = "//tr[@class='navigation-treerow-first z-treerow'][@title='" + menuItem[1:] + "']"
-
+                xpathSt = "//tr[contains(@class, 'z-treerow')][@title='" + menuItem[1:] + "']"
             if menuItem[0]!='*':
-                xpathSt = "//tr[@class='z-treerow'][@title='" + menuItem + "']"
+                xpathSt = xpathSt+ "/following::tr[contains(@class, 'z-treerow')][@title='" + menuItem + "']"
 
             waitElement(xpathSt)
             elemNavigation = driver.find_element_by_xpath(xpathSt)
@@ -234,7 +261,8 @@ class Operation(object):
             if nameParam == 'Значение': elemValue = spParam[1]
             if nameParam == 'Пауза': pauseVal = spParam[1]
 
-        xpathSt = "//label[text()='" + elemValue + "'][@class='z-advradio-content']"
+        #xpathSt = "//label[text()='" + elemValue + "'][@class='z-radio-content']"
+        xpathSt = "//input[@type='radio']/following::label[text()='" + elemValue + "']"
 
         waitElement(xpathSt)
         elem = driver.find_element_by_xpath(xpathSt)
