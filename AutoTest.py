@@ -1,5 +1,5 @@
 import Util
-import Web
+import OperationBase
 
 filename = Util.WorkExcel().FileNameStartParam()
 
@@ -9,7 +9,7 @@ def OperaionMainDef(filename,nameWorksheets):
     stepList = Util.WorkExcel().readStepList(filename,nameWorksheets)
 
     for operation in stepList:
-        print('nnnn' + operation[1])
+    #Запуск внешнего сценария
         if operation[1]=='Сценарий':
             print('Запущен внешний сценарий')
             for itemParam in operation:
@@ -20,12 +20,24 @@ def OperaionMainDef(filename,nameWorksheets):
             if documName == 'Текущий':
                 print(filename+ ' -' +nameWorksheets)
                 OperaionMainDef(filename, nameWorksheets)
+            else:
+                print(documName + ' -' + nameWorksheets)
+                OperaionMainDef(documName, nameWorksheets)
         else:
-            answerOperation = Web.Operation().toExecute(operation)
-        print(answerOperation)
+            spOperation = operation[1].split('.')
+            #Запуск основных операци
+            if len(spOperation) == 1:
+                answerOperation = OperationBase.Operation().toExecute(operation)
+
+            # Запуск дополнительных операций
+            if len(spOperation) > 1:
+                answerOperation = OperationBase.Operation().toExecute(operation)
+            print(answerOperation)
 
 
 OperaionMainDef(filename,'Сценарий')
+OperationBase.opSessionClose()
+print('Тест завершен')
 
 
 
