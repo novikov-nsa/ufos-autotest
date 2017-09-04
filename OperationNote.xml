@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Список операци доступных для тестирования-->
+<operationHeader>
+	<operationType Name="ВФ" systemName="OperationVisualForm">
+		<operation Name="Выбрать из списка" systemName="opSetlListBox">
+			<variable Name="Системное имя кнопки"  obligatory="true" />
+			<variable Name="Выбрать"  obligatory="true" />
+		</operation>
+		<operation Name="Выбрать из справочника" systemName="opSetDict">
+			<variable Name="Название кнопки"  obligatory="true" />
+			<variable Name="Значение"  obligatory="true" />
+		</operation>
+		<operation Name="Перейти на закладку" systemName="opGoToTabPanel">
+			<variable Name="Название"  obligatory="true" />
+		</operation>
+		<operation Name="Установить чекер" systemName="opCheckTrue">
+			<variable Name="Системное имя"  obligatory="true" />
+		</operation>
+		<operation Name="Установить радио кнопку" systemName="opCheckRadioBut">
+			<variable Name="Значение"  obligatory="true" />
+		</operation>
+		<operation Name="Нажать кнопку" systemName="opButton">
+			<variable Name="Название"  obligatory="true" />
+			<variable Name="Порядок"  obligatory="true" />
+		</operation>
+		<operation Name="Сохранить изменения и закрыть окно" systemName="opButtonSaveAndClose">
+			<variable Name="Документ"  obligatory="false" />
+		</operation>
+		<operation Name="Сохранить изменения" systemName="opButtonSave">
+			<variable Name="Документ"  obligatory="false" />
+		</operation>
+	</operationType>
+	<operationType Name="Итератор" systemName="OperationIterator">
+		<operation Name="Нажать кнопку в строке" systemName="opKeyScroller">
+			<variable Name="Название"  obligatory="true" />
+		</operation>
+		<operation Name="Выбрать из справочника" systemName="opKeyScroller">
+			<variable Name="Название"  obligatory="true" />
+		</operation>
+		<operation Name="Добавить строку" systemName="opKeyScroller">
+			<variable Name="Название"  obligatory="true" />
+		</operation>
+		<operation Name="Выбрать из справочника" systemName="opKeyScroller">
+			<variable Name="Название"  obligatory="true" />
+		</operation>
+	</operationType>
+	<operationType Name="Скроллер" systemName="OperationScroll">
+		<operation Name="Кнопка на скроллере" systemName="opKeyScroller">
+			<variable Name="Название"  obligatory="true" />
+		</operation>
+	</operationType>
+	<operationType Name="Навигация" systemName="OperationNavigation">
+		<operation Name="Зайти под пользователем" systemName="opLogin">
+			<variable Name="Пользователь"  obligatory="true" />
+		</operation>
+		<operation Name="Открыть в меню"  systemName="opMenuNavigator">
+			<variable Name="Путь"  obligatory="true" />
+		</operation>
+	</operationType>
+</operationHeader>
