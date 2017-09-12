@@ -1,43 +1,65 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-import time
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-import OperationBase
+import Util
 
-class OperationIterator(object):
-    def toExecute(self,setOperation):
-        nameOperation = setOperation[0]
-        typeOperation = setOperation[1]
-        print(nameOperation,typeOperation)
-        resaultOperation = 'Начало выполнения'
 
-        if typeOperation == 'Итератор.Нажать кнопку в строке':              resaultOperation = Operation().opLogin(setOperation)
+def opKeyButton(driver,setOperation):
+    # Выставить параметры
 
-        def opButton(self, setOperation):
-            # Операция "Кнопка"
-            # Возможные параметры
-            # Название
+    if 'Фильтр' in setOperation:      filterValue = setOperation['Фильтр']
+    if 'Поле фильтр' in setOperation: nameKeyFilter = setOperation['Поле фильтр']
+    if 'Кнопка' in setOperation: key = setOperation['Кнопка']
+    if 'Итератор' in setOperation: nameIterator = setOperation['Итератор']
 
-            # Выставить параметры
-            elemPos = '1'
-            for itemParam in setOperation:
-                spParam = itemParam.split('=')
-                nameParam = spParam[0]
-                if nameParam == 'Название': keyName = spParam[1]
-                if nameParam == 'Порядок': elemPos = spParam[1]
+    if filterValue != 'Все строки':
+        xpathSt = ".//input[@value='"+filterValue+"']" \
+                  "[@name='"+nameKeyFilter+"']/ancestor::div[@class='z-listcell-content']" \
+                  "//button[@title='"+key+"']"
+        Util.waitElement(driver, xpathSt)
+        element = driver.find_element_by_xpath(xpathSt)
+        driver.execute_script("return arguments[0].scrollIntoView();", element)
+        element.click()
+    else:
 
-            xpathSt = "//button[text()='" + keyName + "'][" + elemPos + "]"
-            OperationBase.waitElement(xpathSt)
-            # driver.find_element_by_xpath(xpathSt).click()
+        xpathSt = "//td[contains(@class,'"+nameIterator+"')]//button[contains(text(),'"+key+"')]"
+        print(xpathSt)
 
-            element = OperationBase.driver.find_element_by_xpath(xpathSt)
-            ActionChains(OperationBase.driver).move_to_element(element).click(element).perform()
+        for element in driver.find_elements_by_xpath(xpathSt):
+            Util.waitElement(driver, xpathSt)
 
-            resaultOperation = '[Операция выполнена -] ' + setOperation[1]
-            return resaultOperation
+            elemen = driver.find_element_by_xpath(xpathSt)
+            driver.execute_script("return arguments[0].scrollIntoView();", elemen)
+            elemen.click()
 
-        return resaultOperation
+
+    resaultOperation = {'Статус':'ОК'}
+    return resaultOperation
+
+
+def opSetDict(driver,setOperation):
+    # Выставить параметры
+    filterValue = setOperation['Фильтр']
+    nameKeyFilter = setOperation['Поле фильтр']
+    key = setOperation['Кнопка']
+    dictValue = setOperation['Значение']
+
+    xpathSt = ".//input[@value='"+filterValue+"'][@name='"+nameKeyFilter+"']/ancestor::div[@class='z-listcell-content']"
+    Util.waitElement(driver, xpathSt)
+
+    xpathSt = xpathSt + "//button[@title='"+key+"']"
+    element = driver.find_element_by_xpath(xpathSt)
+    driver.execute_script("return arguments[0].scrollIntoView();", element)
+    element.click()
+
+    if dictValue != "Любое значение":  xpathStDict = "//div[@class='z-listcell-content'][contains(text(), '" + dictValue + "')]"
+    if dictValue == "Любое значение":  xpathStDict = "//div[@class='doc-dialog-content z-center']//tr[@class ='z-listitem']"
+
+    Util.waitElement(driver, xpathSt)
+    element = driver.find_element_by_xpath(xpathStDict)
+
+    ActionChains(driver).move_to_element(element).click(element).perform()
+
+    Util.waitElement(driver, "//button[text()='OK']")
+    driver.find_element_by_xpath("//button[text()='OK']").click()
+
+    resaultOperation = {'Статус':'ОК'}
+    return resaultOperation

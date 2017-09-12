@@ -1,11 +1,43 @@
 import Util
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+
+def opGetValueField(driver, setOperation):
+
+    # Выставить параметры
+    fieldName = setOperation['Поле']
+    variablesParamName = setOperation['Переменная']
+
+
+    xpathSt = "//input[@name='" + fieldName + "']"
+    Util.waitElement(driver,xpathSt)
+
+    elem = driver.find_element_by_xpath(xpathSt)
+    fieldValue = elem.get_attribute('value')
+
+
+    resaultOperation ={'Статус': 'ОК','Переменная':{'Имя параметра':variablesParamName,'Значение':fieldValue}}
+    return resaultOperation
+
+
+
+def opSetValueField(driver, setOperation):
+
+    # Выставить параметры
+    fieldName = setOperation['Поле']
+    fieldValue = setOperation['Значение']
+
+    xpathSt = "//input[@name='" + fieldName + "']"
+    Util.waitElement(driver,xpathSt)
+    driver.find_element_by_xpath(xpathSt).clear()
+    driver.find_element_by_xpath(xpathSt).send_keys(fieldValue)
+
+    resaultOperation = {'Статус':'ОК'}
+    return resaultOperation
+
 
 
 def opButtonSave(driver, setOperation):
-    # Операция "Кнопка"
-    # Возможные параметры
-    # Название
 
     # Выставить параметры
     if 'Документ' in setOperation:
@@ -16,16 +48,15 @@ def opButtonSave(driver, setOperation):
 
     xpathSt = "//button[@title='Сохранить изменения']"
 
-    # xpathSt = "//button[@title='Сохранить изменения и закрыть окно'][1]"
 
     Util.waitElement(driver,xpathSt)
 
     element = driver.find_elements_by_xpath(xpathSt)
-    # ActionChains(driver).move_to_element(element).click(element).perform()
+
     if posKey == '1': driver.find_element_by_xpath(xpathSt).click()
     if posKey == '2': ActionChains(driver).move_to_element(element[1]).click(element[1]).perform()
 
-    resaultOperation = '[Операция выполнена -] '
+    resaultOperation = {'Статус':'ОК'}
     return resaultOperation
 
 
@@ -47,16 +78,15 @@ def opButtonSaveAndClose(driver, setOperation):
 
     xpathSt = "//button[@title='Сохранить изменения и закрыть окно']"
 
-    # xpathSt = "//button[@title='Сохранить изменения и закрыть окно'][1]"
 
     Util.waitElement(driver,xpathSt)
 
     element = driver.find_elements_by_xpath(xpathSt)
-    # ActionChains(driver).move_to_element(element).click(element).perform()
-    if posKey == '1': ActionChains(driver).move_to_element(element).click(element).perform()
-    if posKey == '2': ActionChains(driver).move_to_element(element[1]).click(element[1]).perform()
 
-    resaultOperation = '[Операция выполнена -] '
+    if posKey == '1': element.click()
+    if posKey == '2': element[1].click()
+
+    resaultOperation = {'Статус':'ОК'}
     return resaultOperation
 
 
@@ -72,15 +102,14 @@ def opButton(driver, setOperation):
         elemPos=setOperation['Порядок']
     else:
         elemPos = '1'
-
-    xpathSt = "//button[text()='" + keyName + "'][" + elemPos + "]"
+    xpathSt = "//body//descendant::button[text() = '" + keyName + "'][" + elemPos + "]"
     Util.waitElement(driver,xpathSt)
     # driver.find_element_by_xpath(xpathSt).click()
 
     element = driver.find_element_by_xpath(xpathSt)
     ActionChains(driver).move_to_element(element).click(element).perform()
 
-    resaultOperation = '[Операция выполнена -] '
+    resaultOperation = {'Статус':'ОК'}
     return resaultOperation
 
 
@@ -103,7 +132,7 @@ def opCheckRadioBut(driver, setOperation):
     elem = driver.find_element_by_xpath(xpathSt)
     ActionChains(driver).move_to_element(elem).click(elem).perform()
 
-    resaultOperation = '[Операция выполнена -] '
+    resaultOperation = {'Статус':'ОК'}
     return resaultOperation
 
 
@@ -123,7 +152,7 @@ def opCheckTrue(driver, setOperation):
     elem = driver.find_element_by_xpath(xpathSt)
     ActionChains(driver).move_to_element(elem).click(elem).perform()
 
-    resaultOperation = '[Операция выполнена -] '
+    resaultOperation = {'Статус':'ОК'}
     return resaultOperation
 
 
@@ -143,9 +172,12 @@ def opGoToTabPanel(driver, setOperation):
     Util.waitElement(driver,xpathSt)
     Util.waitElement(driver,xpathSt2)
     elem = driver.find_element_by_xpath(xpathSt2)
-    ActionChains(driver).move_to_element(elem).click(elem).perform()
+    driver.execute_script("return arguments[0].scrollIntoView();", elem)
+    ActionChains(driver).move_to_element(elem).perform()
+    elem.click()
+    #ActionChains(driver).move_to_element(elem).click(elem).perform()
 
-    resaultOperation = '[Операция выполнена -] '
+    resaultOperation = {'Статус':'ОК'}
     return resaultOperation
 
 
@@ -172,7 +204,7 @@ def opSetlListBox(driver, setOperation):
     Util.waitElement(driver,xpathList)
     driver.find_element_by_xpath(xpathList).click()
 
-    resaultOperation = '[Операция выполнена -] '
+    resaultOperation = {'Статус':'ОК'}
     return resaultOperation
 
 def opSetDict(driver,setOperation):
@@ -214,5 +246,5 @@ def opSetDict(driver,setOperation):
         Util.waitElement(driver,"//button[text()='OK']")
         driver.find_element_by_xpath("//button[text()='OK']").click()
 
-        resaultOperation = '[Операция выполнена -] '
+        resaultOperation = {'Статус':'ОК'}
         return resaultOperation

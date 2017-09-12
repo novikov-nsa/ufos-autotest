@@ -10,7 +10,8 @@ import time
 
 def SessionOpen():
     driver = webdriver.Firefox()
-    driver.execute_script("document.body.style.zoom='70%'")
+    print('Версия браузера: ' + '{}: {}'.format(
+        driver.capabilities['browserName'],driver.capabilities['browserVersion']))
     return driver
 
 
@@ -41,6 +42,8 @@ def waitElement(driver,reqText, reqType='XPATH',timer=60 ,typeSearch = 'presence
             if reqType == 'XPATH': WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.XPATH, reqText)))
             if reqType == 'ID': WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.ID, reqText)))
             if reqType == 'NAME': WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.NAME, reqText)))
+            if reqType == 'CSS': WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, reqText)))
+
     except Exception:
         waitResault='[error] Элемент, не найден "' + reqText + '"'
         print(waitResault)

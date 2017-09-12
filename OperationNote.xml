@@ -23,6 +23,14 @@
 			<variable Name="Название"  obligatory="true" />
 			<variable Name="Порядок"  obligatory="true" />
 		</operation>
+		<operation Name="Заполнить поле" systemName="opSetValueField">
+			<variable Name="Поле"  obligatory="true" />
+			<variable Name="Значение"  obligatory="true" />
+		</operation>
+		<operation Name="Значение поля" systemName="opGetValueField">
+			<variable Name="Поле"  obligatory="true" />
+			<variable Name="Переменная"  obligatory="true" />
+		</operation>
 		<operation Name="Сохранить изменения и закрыть окно" systemName="opButtonSaveAndClose">
 			<variable Name="Документ"  obligatory="false" />
 		</operation>
@@ -31,16 +39,16 @@
 		</operation>
 	</operationType>
 	<operationType Name="Итератор" systemName="OperationIterator">
-		<operation Name="Нажать кнопку в строке" systemName="opKeyScroller">
+		<operation Name="Нажать кнопку в строке" systemName="opKeyButton">
 			<variable Name="Название"  obligatory="true" />
 		</operation>
-		<operation Name="Выбрать из справочника" systemName="opKeyScroller">
-			<variable Name="Название"  obligatory="true" />
+		<operation Name="Выбрать из справочника" systemName="opSetDict">
+			<variable Name="Поле фильтр"  obligatory="true" />
+			<variable Name="Фильтр"  obligatory="true" />
+			<variable Name="Кнопка"  obligatory="true" />
+			<variable Name="Значение"  obligatory="true" />
 		</operation>
 		<operation Name="Добавить строку" systemName="opKeyScroller">
-			<variable Name="Название"  obligatory="true" />
-		</operation>
-		<operation Name="Выбрать из справочника" systemName="opKeyScroller">
 			<variable Name="Название"  obligatory="true" />
 		</operation>
 	</operationType>
@@ -55,6 +63,10 @@
 		</operation>
 		<operation Name="Открыть в меню"  systemName="opMenuNavigator">
 			<variable Name="Путь"  obligatory="true" />
+		</operation>
+		<operation Name="Выставит фильтр"  systemName="opFilterScroller">
+			<variable Name="Фильтр"  obligatory="true" />
+			<variable Name="Значение"  obligatory="true" />
 		</operation>
 	</operationType>
 </operationHeader>

@@ -12,5 +12,5 @@ def opKeyScroller(driver, setOperation):
     Util.waitElement(driver,xpathSt)
     driver.find_element_by_xpath(xpathSt).click()
 
-    resaultOperation = '[Операция выполнена -] '
+    resaultOperation = {'Статус':'ОК'}
     return resaultOperation
