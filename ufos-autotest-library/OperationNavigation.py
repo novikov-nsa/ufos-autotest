@@ -1,5 +1,5 @@
 import Util
-from selenium.webdriver.common.keys import Keys
+
 
 def opFilterScroller(driver,setOperation):
 
@@ -44,7 +44,7 @@ def opLogin(driver,setOperation):
     driver.get(url)
 
     if typePortal == 'DEPR':
-        Util.waitElement(driver,"IDToken1", reqType='ID')
+        Util.waitElement(driver, "IDToken1", reqType='ID')
 
         driver.find_element_by_id("IDToken1").clear()
         driver.find_element_by_id("IDToken1").send_keys(userLogin)
@@ -53,7 +53,7 @@ def opLogin(driver,setOperation):
         driver.find_element_by_name("Login.Submit").click()
 
         xpathList = "//a[contains(@class,'navbar-nav-a')][contains(text(), 'Тарифное регулирование')][not(@href='unsafe:javascript:void(0)')]"
-        Util.waitElement(driver,xpathList)
+        Util.waitElement(driver, xpathList)
         driver.find_element_by_xpath(xpathList).click()
 
         xpathSt = "//iframe[@z_xsrc]"
@@ -64,7 +64,7 @@ def opLogin(driver,setOperation):
 
     if typePortal == 'false':
         # Ожидание появления поля
-        Util.waitElement(driver,"user", reqType='ID')
+        Util.waitElement(driver, "user", reqType='ID')
 
         # Ввод значения
         driver.find_element_by_id("user").clear()
@@ -93,7 +93,7 @@ def opMenuNavigator(driver,setOperation):
             if menuItem[0]!='*':
                 xpathSt = xpathSt+ "/following::tr[contains(@class, 'z-treerow')][@title='" + menuItem + "']"
 
-            Util.waitElement(driver,xpathSt)
+            Util.waitElement(driver, xpathSt)
             elemNavigation = driver.find_element_by_xpath(xpathSt)
             elemNavigation.click()
 

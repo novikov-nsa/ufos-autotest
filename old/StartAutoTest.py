@@ -1,10 +1,4 @@
-import Util
-import OperationNavigation
-import OperationScroll
-import OperationVisualForm
-import OperationIterator
-
-
+  import Util
 
 # Чтение начальных настроек из setup.ini
 iniServSelenium, iniStend, initUsers = Util.readStartInitParam()

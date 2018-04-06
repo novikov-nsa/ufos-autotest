@@ -1,6 +1,6 @@
 import Util
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
+
 
 def opGetValueField(driver, setOperation):
 
@@ -10,7 +10,7 @@ def opGetValueField(driver, setOperation):
 
 
     xpathSt = "//input[@name='" + fieldName + "']"
-    Util.waitElement(driver,xpathSt)
+    Util.waitElement(driver, xpathSt)
 
     elem = driver.find_element_by_xpath(xpathSt)
     fieldValue = elem.get_attribute('value')
@@ -28,7 +28,7 @@ def opSetValueField(driver, setOperation):
     fieldValue = setOperation['Значение']
 
     xpathSt = "//input[@name='" + fieldName + "']"
-    Util.waitElement(driver,xpathSt)
+    Util.waitElement(driver, xpathSt)
     driver.find_element_by_xpath(xpathSt).clear()
     driver.find_element_by_xpath(xpathSt).send_keys(fieldValue)
 
@@ -49,7 +49,7 @@ def opButtonSave(driver, setOperation):
     xpathSt = "//button[@title='Сохранить изменения']"
 
 
-    Util.waitElement(driver,xpathSt)
+    Util.waitElement(driver, xpathSt)
 
     element = driver.find_elements_by_xpath(xpathSt)
 
@@ -79,7 +79,7 @@ def opButtonSaveAndClose(driver, setOperation):
     xpathSt = "//button[@title='Сохранить изменения и закрыть окно']"
 
 
-    Util.waitElement(driver,xpathSt)
+    Util.waitElement(driver, xpathSt)
 
     element = driver.find_elements_by_xpath(xpathSt)
 
@@ -103,7 +103,7 @@ def opButton(driver, setOperation):
     else:
         elemPos = '1'
     xpathSt = "//body//descendant::button[text() = '" + keyName + "'][" + elemPos + "]"
-    Util.waitElement(driver,xpathSt)
+    Util.waitElement(driver, xpathSt)
     # driver.find_element_by_xpath(xpathSt).click()
 
     element = driver.find_element_by_xpath(xpathSt)
@@ -128,7 +128,7 @@ def opCheckRadioBut(driver, setOperation):
     # xpathSt = "//label[text()='" + elemValue + "'][@class='z-radio-content']"
     xpathSt = "//input[@type='radio']/following::label[text()='" + elemValue + "']"
 
-    Util.waitElement(driver,xpathSt)
+    Util.waitElement(driver, xpathSt)
     elem = driver.find_element_by_xpath(xpathSt)
     ActionChains(driver).move_to_element(elem).click(elem).perform()
 
@@ -148,7 +148,7 @@ def opCheckTrue(driver, setOperation):
 
     xpathSt = "//input[@name='" + elemName + "']/following-sibling::div"
 
-    Util.waitElement(driver,xpathSt)
+    Util.waitElement(driver, xpathSt)
     elem = driver.find_element_by_xpath(xpathSt)
     ActionChains(driver).move_to_element(elem).click(elem).perform()
 
@@ -169,8 +169,8 @@ def opGoToTabPanel(driver, setOperation):
     xpathSt = "//span[text()='" + panName + "']/parent::a/parent::li[@class='z-tab']"
     xpathSt2 = "//span[text()='" + panName + "']"
 
-    Util.waitElement(driver,xpathSt)
-    Util.waitElement(driver,xpathSt2)
+    Util.waitElement(driver, xpathSt)
+    Util.waitElement(driver, xpathSt2)
     elem = driver.find_element_by_xpath(xpathSt2)
     driver.execute_script("return arguments[0].scrollIntoView();", elem)
     ActionChains(driver).move_to_element(elem).perform()
@@ -195,13 +195,13 @@ def opSetlListBox(driver, setOperation):
     # Нажать кнопку выбора
     xpathSt = sysKeyName
     # waitElementName(xpathSt)
-    Util.waitElement(driver,xpathSt, reqType='NAME')
+    Util.waitElement(driver, xpathSt, reqType='NAME')
     driver.find_element_by_name(xpathSt).click()
 
     # Выбрать первый попавшийся элемент
 
     xpathList = "//span[@class='z-comboitem-text'][contains(text(), '" + selValue + "')]"
-    Util.waitElement(driver,xpathList)
+    Util.waitElement(driver, xpathList)
     driver.find_element_by_xpath(xpathList).click()
 
     resaultOperation = {'Статус':'ОК'}
@@ -226,24 +226,24 @@ def opSetDict(driver,setOperation):
         if dictValue[0] == '~': xpathStDict = "//div[@class='z-listcell-content'][contains(text(), '" + dictValue[1:] + "')]"
 
 
-        Util.waitElement(driver,xpathSt)
+        Util.waitElement(driver, xpathSt)
         driver.find_element_by_xpath(xpathSt).click()
 
         #print(xpathStDict)
 
         if dictValue != 'Выбрать любое значение':
-            Util.waitElement(driver,xpathStDict)
+            Util.waitElement(driver, xpathStDict)
             elem = driver.find_element_by_xpath(xpathStDict)
             ActionChains(driver).move_to_element(elem).click(elem).perform()
 
         if dictValue == 'Выбрать любое значение':
             # Не работает
-            Util.waitElement(driver,xpathStDict)
+            Util.waitElement(driver, xpathStDict)
             elem = driver.find_element_by_xpath(xpathStDict)
             ActionChains(driver).move_to_element(elem).click(elem).perform()
 
 
-        Util.waitElement(driver,"//button[text()='OK']")
+        Util.waitElement(driver, "//button[text()='OK']")
         driver.find_element_by_xpath("//button[text()='OK']").click()
 
         resaultOperation = {'Статус':'ОК'}

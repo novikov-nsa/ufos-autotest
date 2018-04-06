@@ -9,7 +9,7 @@ def opKeyScroller(driver, setOperation):
     keyName = setOperation['Название']
 
     xpathSt = "//button[@title='" + keyName + "']"
-    Util.waitElement(driver,xpathSt)
+    Util.waitElement(driver, xpathSt)
     driver.find_element_by_xpath(xpathSt).click()
 
     resaultOperation = {'Статус':'ОК'}
