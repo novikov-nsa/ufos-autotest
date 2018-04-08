@@ -6,7 +6,7 @@ class OperationNavigation():
         self.util = UfosAutotestUtil()
 
     def opFilterScroller(self, driver,setOperation):
-        # TODO\btoto\b.Реализовать рускоязычную обертку для метода opFilterScroller
+        # TODO Реализовать рускоязычную обертку для метода opFilterScroller
         #Проверить на включенность фильтров
         xpathSt = "//img[@title='Видимость фильтров'][contains(@class,'filterToggler z-image')]"
 
@@ -93,7 +93,7 @@ class OperationNavigation():
     #    return resaultOperation
 
 
-    def opMenuNavigator(self, driver,menuStr):
+    def opMenuNavigator(self, driver, menuStr):
             # Операция "Открыть в меню навигации"
             # Возможные параметры
             # Путь (Задается через разделитель / знак * означает корневой элемент)

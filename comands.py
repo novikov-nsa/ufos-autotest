@@ -1,11 +1,13 @@
 from util import UfosAutotestUtil
 from operationnavigation import OperationNavigation
+from operationscroll import OperationScroll
 
 class Сценарий:
 
     def __init__(self):
         self.session = UfosAutotestUtil()
         self.op_navigation = OperationNavigation()
+        self.op_scroller = OperationScroll()
 
     def ОткрытьСессию(self):
         self.session.SessionOpen()
@@ -18,3 +20,6 @@ class Сценарий:
 
     def ОткрытьМенюНавигации(self, путь):
         self.op_navigation.opMenuNavigator(driver=self.session.driver, menuStr=путь)
+
+    def НажатьКнопкуСФ(self, названиеКнопки):
+        self.op_scroller.opKeyScroller(driver=self.session.driver, keyName=названиеКнопки)
