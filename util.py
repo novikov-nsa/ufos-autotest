@@ -11,14 +11,14 @@ import time
 class UfosAutotestUtil:
 
     def SessionOpen(self):
-        driver = webdriver.Firefox()
+        self.driver = webdriver.Firefox()
         print('Версия браузера: ' + '{}: {}'.format(
-            driver.capabilities['browserName'],driver.capabilities['browserVersion']))
-        return driver
+            self.driver.capabilities['browserName'],self.driver.capabilities['browserVersion']))
+        return self.driver
 
 
     def opSessionClose(self, driver):
-        driver = webdriver.close()
+        self.driver = webdriver.close()
 
 
     def waitElement(self, driver,reqText, reqType='XPATH',timer=60 ,typeSearch = 'presence_of_element_located'):
@@ -50,9 +50,9 @@ class UfosAutotestUtil:
             waitResault='[error] Элемент, не найден "' + reqText + '"'
             print(waitResault)
             exit(10)
-            else:
-                waitResault = '                (Элемент Найден) "' + reqText + '"'
-                print(waitResault)
+        else:
+            waitResault = '                (Элемент Найден) "' + reqText + '"'
+            print(waitResault)
 
 
 # Выводит сообщения в консоль

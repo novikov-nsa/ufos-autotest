@@ -1,3 +1,4 @@
+#TODO Реализовать рускоязычнуюобертку для всего класса
 import Util
 
 def opKeyScroller(driver, setOperation):
