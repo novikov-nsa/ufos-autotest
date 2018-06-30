@@ -6,12 +6,7 @@ class OperationVisualForm:
     def __init__(self):
         self.util = UfosAutotestUtil()
 
-    def opGetValueField(self, driver, setOperation):
-
-        # Выставить параметры
-        fieldName = setOperation['Поле']
-        variablesParamName = setOperation['Переменная']
-
+    def opGetValueField(self, driver, fieldName, variablesParamName):
 
         xpathSt = "//input[@name='" + fieldName + "']"
         self.util.waitElement(driver, xpathSt)

@@ -30,6 +30,6 @@ class Сценарий:
         self.op_scroller.opKeyScroller(driver=self.session.driver, keyName=названиеКнопки)
 
     # Визуальная форма
-    def ПолучитьЗначениеПоля(self, имяПоля):
-        self.op_visual_form.opGetValueField(driver=self.session.driver, setOperation=имяПоля)
+    def ПолучитьЗначениеПоля(self, имяПоля, имяПеременной):
+        self.op_visual_form.opGetValueField(driver=self.session.driver, fieldName=имяПоля, variablesParamName=имяПеременной)
 
