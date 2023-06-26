@@ -1,12 +1,12 @@
 import openpyxl
-import os,sys
+import os, sys
 import lxml.etree
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import time
-
+import argparse
 
 class UfosAutotestUtil:
 
@@ -185,6 +185,24 @@ class UfosAutotestUtil:
             initUsers[name] = itemsD
         return iniServSelenium,iniStend,initUsers
 
+    def readParams(self):
+        arg_parser = argparse.ArgumentParser(description='')
+        arg_parser.add_argument('-u', '--user-name', action='store',
+                                help='Имя пользователя')
+        arg_parser.add_argument('-ul', '--user-password', action='store',
+                                help='Пароль пользователя')
+
+        args = arg_parser.parse_args()
+        if args.user_name:
+            user_name = args.user_name
+        else:
+            sys.exit()
+
+        if args.user_password:
+            user_password = args.user_password
+        else:
+            sys.exit()
+        return user_name, user_password
 # Примеры получения значений из переменных
 #    x1 = iniServSelenium['S1']['Browser']
 #    x2 = iniStend['DEV']['Url']

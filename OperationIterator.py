@@ -1,4 +1,4 @@
-import Util
+from util import UfosAutotestUtil
 from selenium.webdriver.common.action_chains import ActionChains
 
 

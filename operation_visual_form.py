@@ -1,5 +1,6 @@
 from util import UfosAutotestUtil
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
 
 class OperationVisualForm:
 
@@ -11,7 +12,7 @@ class OperationVisualForm:
         xpathSt = "//input[@name='" + fieldName + "']"
         self.util.waitElement(driver, xpathSt)
 
-        elem = driver.find_element_by_xpath(xpathSt)
+        elem = driver.find_element(By.XPATH, xpathSt)
         fieldValue = elem.get_attribute('value')
 
 
@@ -28,8 +29,8 @@ class OperationVisualForm:
 
         xpathSt = "//input[@name='" + fieldName + "']"
         self.util.waitElement(driver, xpathSt)
-        driver.find_element_by_xpath(xpathSt).clear()
-        driver.find_element_by_xpath(xpathSt).send_keys(fieldValue)
+        driver.find_element(By.XPATH, xpathSt).clear()
+        driver.find_element(By.XPATH, xpathSt).send_keys(fieldValue)
 
         resaultOperation = {'Статус':'ОК'}
         return resaultOperation
@@ -52,7 +53,7 @@ class OperationVisualForm:
 
         element = driver.find_elements_by_xpath(xpathSt)
 
-        if posKey == '1': driver.find_element_by_xpath(xpathSt).click()
+        if posKey == '1': driver.find_element(By.XPATH, xpathSt).click()
         if posKey == '2': ActionChains(driver).move_to_element(element[1]).click(element[1]).perform()
 
         resaultOperation = {'Статус':'ОК'}
@@ -105,7 +106,7 @@ class OperationVisualForm:
         self.util.waitElement(driver, xpathSt)
         # driver.find_element_by_xpath(xpathSt).click()
 
-        element = driver.find_element_by_xpath(xpathSt)
+        element = driver.find_element(By.XPATH, xpathSt)
         ActionChains(driver).move_to_element(element).click(element).perform()
 
         resaultOperation = {'Статус':'ОК'}
@@ -128,7 +129,7 @@ class OperationVisualForm:
         xpathSt = "//input[@type='radio']/following::label[text()='" + elemValue + "']"
 
         self.util.waitElement(driver, xpathSt)
-        elem = driver.find_element_by_xpath(xpathSt)
+        elem = driver.find_element(By.XPATH, xpathSt)
         ActionChains(driver).move_to_element(elem).click(elem).perform()
 
         resaultOperation = {'Статус':'ОК'}
@@ -148,7 +149,7 @@ class OperationVisualForm:
         xpathSt = "//input[@name='" + elemName + "']/following-sibling::div"
 
         self.util.waitElement(driver, xpathSt)
-        elem = driver.find_element_by_xpath(xpathSt)
+        elem = driver.find_element(By.XPATH, xpathSt)
         ActionChains(driver).move_to_element(elem).click(elem).perform()
 
         resaultOperation = {'Статус':'ОК'}
@@ -170,7 +171,7 @@ class OperationVisualForm:
 
         self.util.waitElement(driver, xpathSt)
         self.util.waitElement(driver, xpathSt2)
-        elem = driver.find_element_by_xpath(xpathSt2)
+        elem = driver.find_element(By.XPATH, xpathSt2)
         driver.execute_script("return arguments[0].scrollIntoView();", elem)
         ActionChains(driver).move_to_element(elem).perform()
         elem.click()
@@ -195,13 +196,13 @@ class OperationVisualForm:
         xpathSt = sysKeyName
         # waitElementName(xpathSt)
         self.util.waitElement(driver, xpathSt, reqType='NAME')
-        driver.find_element_by_name(xpathSt).click()
+        driver.find_element(By.NAME, xpathSt).click()
 
         # Выбрать первый попавшийся элемент
 
         xpathList = "//span[@class='z-comboitem-text'][contains(text(), '" + selValue + "')]"
         self.util.waitElement(driver, xpathList)
-        driver.find_element_by_xpath(xpathList).click()
+        driver.find_element(By.XPATH, xpathList).click()
 
         resaultOperation = {'Статус':'ОК'}
         return resaultOperation
@@ -226,24 +227,24 @@ class OperationVisualForm:
 
 
             self.util.waitElement(driver, xpathSt)
-            driver.find_element_by_xpath(xpathSt).click()
+            driver.find_element(By.XPATH, xpathSt).click()
 
             #print(xpathStDict)
 
             if dictValue != 'Выбрать любое значение':
                 self.util.waitElement(driver, xpathStDict)
-                elem = driver.find_element_by_xpath(xpathStDict)
+                elem = driver.find_element(By.XPATH, xpathStDict)
                 ActionChains(driver).move_to_element(elem).click(elem).perform()
 
             if dictValue == 'Выбрать любое значение':
                 # Не работает
                 self.util.waitElement(driver, xpathStDict)
-                elem = driver.find_element_by_xpath(xpathStDict)
+                elem = driver.find_element(By.XPATH, xpathStDict)
                 ActionChains(driver).move_to_element(elem).click(elem).perform()
 
 
             self.util.waitElement(driver, "//button[text()='OK']")
-            driver.find_element_by_xpath("//button[text()='OK']").click()
+            driver.find_element(By.XPATH, "//button[text()='OK']").click()
 
             resaultOperation = {'Статус':'ОК'}
             return resaultOperation

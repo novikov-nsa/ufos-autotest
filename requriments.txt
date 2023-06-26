@@ -1,0 +1,3 @@
+openpyxl
+lxml
+selenium==4.10.0

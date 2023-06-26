@@ -1,4 +1,5 @@
 from util import UfosAutotestUtil
+from selenium.webdriver.common.by import By
 
 class OperationNavigation():
 
@@ -11,7 +12,7 @@ class OperationNavigation():
         xpathSt = "//img[@title='Видимость фильтров'][contains(@class,'filterToggler z-image')]"
 
         self.util.waitElement(driver, xpathSt)
-        elem = driver.find_element_by_xpath(xpathSt)
+        elem = driver.find_element(By.XPATH, xpathSt)
         src = elem.get_attribute('src')
 
         src = (src.split(';'))[0]
@@ -31,16 +32,19 @@ class OperationNavigation():
         resaultOperation = {'Статус':'ОК'}
         return resaultOperation
 
-    def opLoginNew(self, driver, url, login, passwd):
+    def opLoginNew(self, driver, url, login, passwd, iddqd):
         driver.get(url)
-        driver.find_element_by_id("user").clear()
-        driver.find_element_by_id("user").send_keys(login)
-        driver.find_element_by_id("psw").clear()
-        driver.find_element_by_id("psw").send_keys(passwd)
-        driver.find_element_by_id("okButton").click()
+        driver.find_element(By.ID, "user").clear()
+        driver.find_element(By.ID, "user").send_keys(login)
+        driver.find_element(By.ID, "psw").clear()
+        driver.find_element(By.ID, "psw").send_keys(passwd)
+        driver.find_element(By.ID, "okButton").click()
+        if iddqd is not None:
+            driver.find_element(By.ID, "rpl").clear()
+            driver.find_element(By.ID, "rpl").send_keys(iddqd)
 
-        resultOperation = {'Статус': 'ОК'}
-        return resultOperation
+        result_operation = {'Статус': 'ОК'}
+        return result_operation
 
 
     #def opLogin(self, driver,setOperation):
@@ -109,7 +113,7 @@ class OperationNavigation():
                     xpathSt = xpathSt+ "/following::tr[contains(@class, 'z-treerow')][@title='" + menuItem + "']"
 
                 self.util.waitElement(driver, xpathSt)
-                elemNavigation = driver.find_element_by_xpath(xpathSt)
+                elemNavigation = driver.find_element(By.XPATH, xpathSt)
                 elemNavigation.click()
 
             resaultOperation = {'Статус':'ОК'}
