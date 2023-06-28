@@ -1,5 +1,6 @@
 from util import UfosAutotestUtil
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 
 class OperationNavigation():
 
@@ -32,13 +33,36 @@ class OperationNavigation():
         resaultOperation = {'Статус':'ОК'}
         return resaultOperation
 
-    def opLoginNew(self, driver, url, login, passwd, iddqd):
+    def opLoginNew(self, driver, url, login, passwd, iddqd, type_loginform):
+        '''
+
+        :param driver: объект Selenium
+        :param url: URL приложения
+        :param login: Имя пользователя
+        :param passwd: Пароль
+        :param iddqd: логин пользователя от имени которого происходит вход
+        :param type_loginform: тип формы (sso - форма аутентификации с через keycloak, basic - основная форма аутентификации)
+        :return:
+        '''
         driver.get(url)
-        driver.find_element(By.ID, "user").clear()
-        driver.find_element(By.ID, "user").send_keys(login)
-        driver.find_element(By.ID, "psw").clear()
-        driver.find_element(By.ID, "psw").send_keys(passwd)
-        driver.find_element(By.ID, "okButton").click()
+        if type_loginform == 'basic':
+            login_element_id = 'user'
+            password_element_id = 'psw'
+            button_element_id = 'okButton'
+        elif type_loginform == 'sso':
+            login_element_id = 'username'
+            password_element_id = 'password'
+            button_element_id = 'kc-login'
+        else:
+            return {'Статус': 'ERROR'}
+        WebDriverWait(driver, timeout=3).until(lambda d: d.find_element(By.ID,login_element_id))
+        driver.find_element(By.ID, login_element_id).clear()
+        driver.find_element(By.ID, login_element_id).send_keys(login)
+        driver.find_element(By.ID, password_element_id).clear()
+        driver.find_element(By.ID, password_element_id).send_keys(passwd)
+        driver.find_element(By.ID, button_element_id).click()
+
+
         if iddqd is not None:
             driver.find_element(By.ID, "rpl").clear()
             driver.find_element(By.ID, "rpl").send_keys(iddqd)
@@ -116,5 +140,5 @@ class OperationNavigation():
                 elemNavigation = driver.find_element(By.XPATH, xpathSt)
                 elemNavigation.click()
 
-            resaultOperation = {'Статус':'ОК'}
-            return resaultOperation
+            resultOperation = {'Статус':'ОК'}
+            return resultOperation

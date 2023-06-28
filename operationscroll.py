@@ -1,5 +1,6 @@
 #FIXED Реализовать рускоязычнуюобертку для всего класса
 from util import UfosAutotestUtil
+from selenium.webdriver.common.by import By
 
 class OperationScroll():
 
@@ -14,7 +15,7 @@ class OperationScroll():
         # Выставить параметры
         xpathSt = "//button[@title='" + keyName + "']"
         self.util.waitElement(driver, xpathSt)
-        driver.find_element_by_xpath(xpathSt).click()
+        driver.find_element(By.XPATH, xpathSt).click()
 
         resaultOperation = {'Статус':'ОК'}
         return resaultOperation
