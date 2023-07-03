@@ -18,12 +18,14 @@ class UfosAutotestUtil:
 
 
     def opSessionClose(self, driver):
-        self.driver = webdriver.close()
+        self.driver = driver.close()
 
 
     def waitElement(self, driver,reqText, reqType='XPATH',timer=60 ,typeSearch = 'presence_of_element_located'):
-#Проверка наличия индикатора ожидания обработки страницы
-#Если найден элемент //div[@class='z-loading-indicator'] ожидаем 60 сек. пока он пропадет
+        '''
+        Проверка наличия индикатора ожидания обработки страницы
+        Если найден элемент //div[@class='z-loading-indicator'] ожидаем 60 сек. пока он пропадет
+        '''
         try:
             WebDriverWait(driver, 1.1).until(EC.presence_of_element_located((By.XPATH, "//div[@class='z-loading-indicator']")))
         except Exception: x=1
@@ -36,9 +38,9 @@ class UfosAutotestUtil:
                 else: print("                (Ожидание обработки страницы )", i, "сек")
             if i==60:
                 print("[error] Превышено время ожидания")
-                exit(10)
+                return 'error'
 
-#Проверяем наличие элемента
+        #Проверяем наличие элемента
         try:
             if typeSearch == 'presence_of_element_located':
                 if reqType == 'XPATH': WebDriverWait(driver, timer).until(EC.presence_of_element_located((By.XPATH, reqText)))
@@ -49,13 +51,14 @@ class UfosAutotestUtil:
         except Exception:
             waitResault='[error] Элемент, не найден "' + reqText + '"'
             print(waitResault)
-            exit(10)
+            return 'error'
         else:
             waitResault = '                (Элемент Найден) "' + reqText + '"'
             print(waitResault)
+            return 'ok'
 
 
-# Выводит сообщения в консоль
+    # Выводит сообщения в консоль
     def printConsoleStep(self, stepNote):
         txt = '[Выполняется] ' + stepNote['Step'] + ' ' + stepNote['Name'] + ' ('
         for key in stepNote:

@@ -1,6 +1,8 @@
+import datetime
 from util import UfosAutotestUtil
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.common.exceptions import ElementNotVisibleException
 
 class OperationNavigation():
 
@@ -55,20 +57,47 @@ class OperationNavigation():
             button_element_id = 'kc-login'
         else:
             return {'Статус': 'ERROR'}
-        WebDriverWait(driver, timeout=3).until(lambda d: d.find_element(By.ID,login_element_id))
-        driver.find_element(By.ID, login_element_id).clear()
-        driver.find_element(By.ID, login_element_id).send_keys(login)
-        driver.find_element(By.ID, password_element_id).clear()
-        driver.find_element(By.ID, password_element_id).send_keys(passwd)
-        driver.find_element(By.ID, button_element_id).click()
-
-
-        if iddqd is not None:
-            driver.find_element(By.ID, "rpl").clear()
-            driver.find_element(By.ID, "rpl").send_keys(iddqd)
-
-        result_operation = {'Статус': 'ОК'}
-        return result_operation
+        try:
+            WebDriverWait(driver, timeout=3).until(lambda d: d.find_element(By.ID,login_element_id))
+        except ElementNotVisibleException:
+            result = {'Operation': 'Аутентификация', 'dateTimeOperation': datetime.datetime.now(), 'result': 'Failed'}
+        else:
+            try:
+                driver.find_element(By.ID, login_element_id)
+            except ElementNotVisibleException:
+                result = {'Operation': 'Аутентификация', 'dateTimeOperation': datetime.datetime.now(),
+                          'result': 'Failed', 'comment': 'Елемент для ввода имени полььзователя не отображается'}
+            else:
+                driver.find_element(By.ID, login_element_id).clear()
+                driver.find_element(By.ID, login_element_id).send_keys(login)
+                try:
+                    driver.find_element(By.ID, password_element_id)
+                except ElementNotVisibleException:
+                    result = {'Operation': 'Аутентификация', 'dateTimeOperation': datetime.datetime.now(),
+                              'result': 'Failed', 'comment': 'Элемент для ввода пароля не отображается'}
+                else:
+                    driver.find_element(By.ID, password_element_id).clear()
+                    driver.find_element(By.ID, password_element_id).send_keys(passwd)
+                    try:
+                        driver.find_element(By.ID, button_element_id)
+                    except ElementNotVisibleException:
+                        result = {'Operation': 'Аутентификация', 'dateTimeOperation': datetime.datetime.now(),
+                                  'result': 'Failed', 'comment': 'Кнопка для подтверждения входа не отображается'}
+                    else:
+                        driver.find_element(By.ID, button_element_id).click()
+                        result = {'Operation': 'Аутентификация', 'dateTimeOperation': datetime.datetime.now(),
+                                  'result': 'ok'}
+                        if iddqd is not None:
+                            try:
+                                driver.find_element(By.ID, "rpl")
+                            except ElementNotVisibleException:
+                                result = {'Operation': 'Аутентификация', 'dateTimeOperation': datetime.datetime.now(),
+                                          'result': 'Failed',
+                                          'comment': 'Поле для ввода реального пользователя не отображается'}
+                            else:
+                                driver.find_element(By.ID, "rpl").clear()
+                                driver.find_element(By.ID, "rpl").send_keys(iddqd)
+        return result
 
 
     #def opLogin(self, driver,setOperation):
@@ -127,7 +156,7 @@ class OperationNavigation():
             # Путь (Задается через разделитель / знак * означает корневой элемент)
 
             # Выставить параметры
-
+            error = False
             for menuItem in menuStr.split('/'):
                 # * Обозначение узла навигации
                 if menuItem[0]=='*':
@@ -136,9 +165,16 @@ class OperationNavigation():
                 if menuItem[0]!='*':
                     xpathSt = xpathSt+ "/following::tr[contains(@class, 'z-treerow')][@title='" + menuItem + "']"
 
-                self.util.waitElement(driver, xpathSt)
-                elemNavigation = driver.find_element(By.XPATH, xpathSt)
-                elemNavigation.click()
-
-            resultOperation = {'Статус':'ОК'}
+                wait_result = self.util.waitElement(driver, xpathSt)
+                if wait_result == 'ok':
+                    elemNavigation = driver.find_element(By.XPATH, xpathSt)
+                    elemNavigation.click()
+                else:
+                    error = True
+            if error:
+                result_text = 'Failed'
+            else:
+                result_text = 'Ok'
+            resultOperation = {'Operation': 'Выбрать пункт меню навигации',
+                                   'dateTimeOperation': datetime.datetime.now(), 'result': result_text}
             return resultOperation

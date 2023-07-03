@@ -1,6 +1,8 @@
 from util import UfosAutotestUtil
+import datetime
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import ElementNotVisibleException
 
 class OperationVisualForm:
 
@@ -28,12 +30,17 @@ class OperationVisualForm:
         fieldValue = setOperation['Значение']
 
         xpathSt = "//input[@name='" + fieldName + "']"
-        self.util.waitElement(driver, xpathSt)
-        driver.find_element(By.XPATH, xpathSt).clear()
-        driver.find_element(By.XPATH, xpathSt).send_keys(fieldValue)
+        wait_result = self.util.waitElement(driver, xpathSt)
+        if wait_result == 'ok':
+            driver.find_element(By.XPATH, xpathSt).clear()
+            driver.find_element(By.XPATH, xpathSt).send_keys(fieldValue)
+            result = {'Operation': 'Ввести значение в поле', 'dateTimeOperation': datetime.datetime.now(),
+                      'result': 'ok'}
+        else:
+            result = {'Operation': 'Ввести значение в поле', 'dateTimeOperation': datetime.datetime.now(),
+                      'result': 'Failed', 'comment': 'Поле для ввода значения не найдено'}
 
-        resaultOperation = {'Статус':'ОК'}
-        return resaultOperation
+        return result
 
 
 
@@ -195,17 +202,19 @@ class OperationVisualForm:
         # Нажать кнопку выбора
         xpathSt = sysKeyName
         # waitElementName(xpathSt)
-        self.util.waitElement(driver, xpathSt, reqType='NAME')
-        driver.find_element(By.NAME, xpathSt).click()
-
-        # Выбрать первый попавшийся элемент
-
-        xpathList = "//span[@class='z-comboitem-text'][contains(text(), '" + selValue + "')]"
-        self.util.waitElement(driver, xpathList)
-        driver.find_element(By.XPATH, xpathList).click()
-
-        resaultOperation = {'Статус':'ОК'}
-        return resaultOperation
+        wait_result = self.util.waitElement(driver, xpathSt, reqType='NAME')
+        if wait_result == 'ok':
+            driver.find_element(By.NAME, xpathSt).click()
+            # Выбрать первый попавшийся элемент
+            xpathList = "//span[@class='z-comboitem-text'][contains(text(), '" + selValue + "')]"
+            self.util.waitElement(driver, xpathList)
+            driver.find_element(By.XPATH, xpathList).click()
+            result = {'Operation': 'Заполнить поле значением из выпадающего списка', 'dateTimeOperation': datetime.datetime.now(),
+                      'result': 'ok'}
+        else:
+            result = {'Operation': 'Заполнить поле значением из выпадающего списка', 'dateTimeOperation': datetime.datetime.now(),
+                      'result': 'Failed', 'comment': 'Поле с выпадающим списком не отображается'}
+        return result
 
     def opSetDict(self, driver,setOperation):
         # Операция "Выбрать из справочника"

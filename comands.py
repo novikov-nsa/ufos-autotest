@@ -1,3 +1,4 @@
+import sys
 from util import UfosAutotestUtil
 from operationnavigation import OperationNavigation
 from operationscroll import OperationScroll
@@ -23,15 +24,38 @@ class Сценарий:
         self.session.opSessionClose(self.session.driver)
 
     def Аутентификация(self, адрес: str, пользователь: str, пароль: str, iddqd : str, тип_формы):
-        self.op_navigation.opLoginNew(driver=self.session.driver,url=адрес, login=пользователь, passwd=пароль, iddqd=iddqd, type_loginform=тип_формы)
+        result = self.op_navigation.opLoginNew(driver=self.session.driver,url=адрес, login=пользователь, passwd=пароль,
+                                               iddqd=iddqd, type_loginform=тип_формы)
+        if result['result'] == 'Failed':
+            print(f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" по адресу "{адрес}", пользователь "{пользователь}", '
+                  f'за пользователя "{iddqd}" не пройден')
+            self.session.driver.close()
+            sys.exit(10)
+        else:
+            print(
+                f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" по адресу "{адрес}", пользователь "{пользователь}", '
+                f'за пользователя "{iddqd}" пройден')
+
 
     # Навигация
     def ОткрытьМенюНавигации(self, путь):
-        self.op_navigation.opMenuNavigator(driver=self.session.driver, menuStr=путь)
+        result = self.op_navigation.opMenuNavigator(driver=self.session.driver, menuStr=путь)
+        if result['result'] == 'Failed':
+            print(f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" по адресу "{путь}" не пройден')
+            self.session.driver.close()
+            sys.exit(10)
+        else:
+            print(f'{result["dateTimeOperation"]}, шаг {result["Operation"]} по адресу "{путь}" пройден')
 
     # Списковая форма
     def НажатьКнопкуСФ(self, названиеКнопки):
-        self.op_scroller.opKeyScroller(driver=self.session.driver, keyName=названиеКнопки)
+        result = self.op_scroller.opKeyScroller(driver=self.session.driver, keyName=названиеКнопки)
+        if result['result'] == 'Failed':
+            print(f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" с именем "{названиеКнопки}" не пройден')
+            self.session.driver.close()
+            sys.exit(10)
+        else:
+            print(f'{result["dateTimeOperation"]}, шаг {result["Operation"]} с именем "{названиеКнопки}" пройден')
 
     # Визуальная форма
     def ПолучитьЗначениеПоля(self, имяПоля, имяПеременной):
@@ -39,5 +63,11 @@ class Сценарий:
 
     def УстановитьЗначениеВыпадающегоСписка(self, имяКнопки, значение):
         setOperation = {'Системное имя кнопки': имяКнопки, 'Выбрать': значение}
-        self.op_visual_form.opSetlListBox(driver=self.session.driver, setOperation=setOperation)
+        result = self.op_visual_form.opSetlListBox(driver=self.session.driver, setOperation=setOperation)
+        if result['result'] == 'Failed':
+            print(f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" с именем "{имяКнопки}" не пройден')
+            self.session.driver.close()
+            sys.exit(10)
+        else:
+            print(f'{result["dateTimeOperation"]}, шаг {result["Operation"]} с именем "{имяКнопки}" пройден')
 
