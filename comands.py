@@ -23,7 +23,7 @@ class Сценарий:
     def ЗакрытьСессию(self):
         self.session.opSessionClose(self.session.driver)
 
-    def Аутентификация(self, адрес: str, пользователь: str, пароль: str, iddqd : str, тип_формы):
+    def Аутентификация(self, адрес: str, пользователь: str, пароль: str, iddqd=None , тип_формы='basic'):
         result = self.op_navigation.opLoginNew(driver=self.session.driver,url=адрес, login=пользователь, passwd=пароль,
                                                iddqd=iddqd, type_loginform=тип_формы)
         if result['result'] == 'Failed':
@@ -66,8 +66,33 @@ class Сценарий:
         result = self.op_visual_form.opSetlListBox(driver=self.session.driver, setOperation=setOperation)
         if result['result'] == 'Failed':
             print(f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" с именем "{имяКнопки}" не пройден')
+            if 'comment' in result.keys():
+                print(f'{result["comment"]}')
             self.session.driver.close()
             sys.exit(10)
         else:
             print(f'{result["dateTimeOperation"]}, шаг {result["Operation"]} с именем "{имяКнопки}" пройден')
+
+    def УстановитьЗначениеПоля(self, поле, значение):
+        result = self.op_visual_form.opSetValueField(driver=self.session.driver, setOperation={'Поле': поле, 'Значение': значение})
+        if result['result'] == 'Failed':
+            print(f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" в поле "{поле}"  значение "{значение}" не пройден')
+            self.session.driver.close()
+            sys.exit(10)
+        else:
+            print(f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" в поле "{поле}"  значение "{значение}" пройден')
+
+    def ВыбратьИзСправочника(self, имяКнопки, справочник, фильтр, текст_в_строке):
+        result = self.op_visual_form.select_from_dict(driver=self.session.driver, dict_button_name=имяКнопки, dict_name=справочник,
+                                                      columns_where_find=фильтр, text_to_find=текст_в_строке)
+        if result['result'] == 'Failed':
+            print(f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" не пройден')
+            if 'comment' in result.keys():
+                print(f'{result["comment"]}')
+            self.session.driver.close()
+            sys.exit(10)
+        else:
+            print(f'{result["dateTimeOperation"]}, шаг "{result["Operation"]}" пройден')
+    def НажатьКнопку(self):
+        pass
 

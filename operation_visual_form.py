@@ -2,6 +2,7 @@ from util import UfosAutotestUtil
 import datetime
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementNotVisibleException
 
 class OperationVisualForm:
@@ -207,16 +208,22 @@ class OperationVisualForm:
             driver.find_element(By.NAME, xpathSt).click()
             # Выбрать первый попавшийся элемент
             xpathList = "//span[@class='z-comboitem-text'][contains(text(), '" + selValue + "')]"
-            self.util.waitElement(driver, xpathList)
-            driver.find_element(By.XPATH, xpathList).click()
-            result = {'Operation': 'Заполнить поле значением из выпадающего списка', 'dateTimeOperation': datetime.datetime.now(),
+            #xpathList = "//li[@class='z-comboitem' and @title='" + selValue + "']"
+            wait_result2 = self.util.waitElement(driver, xpathList)
+            if wait_result2 == 'ok':
+                driver.find_element(By.XPATH, xpathList).click()
+                result = {'Operation': 'Заполнить поле значением из выпадающего списка', 'dateTimeOperation': datetime.datetime.now(),
                       'result': 'ok'}
+            else:
+                result = {'Operation': 'Заполнить поле значением из выпадающего списка',
+                          'dateTimeOperation': datetime.datetime.now(),
+                          'result': 'Failed', 'comment': f'Значение "{selValue}" не найдено'}
         else:
             result = {'Operation': 'Заполнить поле значением из выпадающего списка', 'dateTimeOperation': datetime.datetime.now(),
                       'result': 'Failed', 'comment': 'Поле с выпадающим списком не отображается'}
         return result
 
-    def opSetDict(self, driver,setOperation):
+    def opSetDict(self, driver, setOperation):
         # Операция "Выбрать из справочника"
         # Возможные параметры
         # Название кнопки
@@ -257,3 +264,54 @@ class OperationVisualForm:
 
             resaultOperation = {'Статус':'ОК'}
             return resaultOperation
+
+    def select_from_dict(self, driver, dict_button_name: str, dict_name: str, columns_where_find: dict, text_to_find: str):
+
+        '''
+        :param driver:
+        :param dict_button_name: имя кнопки выбора значения из справочника на визуальной форме
+        :param dict_name: наименование справочника (справочная информация)
+        :param column_where_find: наименование колонок и их значения, которые необходимо найти
+        :return:
+        '''
+
+        wait_result = self.util.waitElement(driver, dict_button_name, reqType='NAME')
+        if wait_result == 'ok':
+            driver.find_element(By.NAME, dict_button_name).click()
+
+            for column in columns_where_find:
+                x_column = "//input[@filter-for='" + column + "']"
+                wait_result_select_form = self.util.waitElement(driver, reqText= x_column)
+                if wait_result_select_form == 'ok':
+                    driver.find_element(By.XPATH, x_column).clear()
+                    if len(columns_where_find[column]) > 0:
+                        driver.find_element(By.XPATH, x_column).send_keys(columns_where_find[column])
+                else:
+                    result = {'Operation': f'Выбрать из справочника "{dict_name}"',
+                              'dateTimeOperation': datetime.datetime.now(),
+                              'result': 'Failed', 'comment': f'Колонка "{columns_where_find[column]}" не найдена'}
+            driver.find_element(By.XPATH, x_column).send_keys(Keys.RETURN)
+            # Найти строку для выбора
+            x_find_value = "//div[@class='z-listcell-content'][contains(text(), '" + text_to_find + "')]"
+            wait_result_find_text = self.util.waitElement(driver, reqText= x_find_value)
+            if wait_result_find_text == 'ok':
+                driver.find_element(By.XPATH, x_find_value).click()
+                wait_result_find_ok_button = self.util.waitElement(driver, "//button[text()='OK']")
+                if wait_result_find_ok_button == 'ok':
+                    driver.find_element(By.XPATH, "//button[text()='OK']").click()
+                    result = {'Operation': f'Выбрать из справочника "{dict_name}"',
+                      'dateTimeOperation': datetime.datetime.now(),
+                      'result': 'ok'}
+                else:
+                    result = {'Operation': f'Выбрать из справочника "{dict_name}"',
+                              'dateTimeOperation': datetime.datetime.now(),
+                              'result': 'Failed', 'comment': f'Кнопка "OK" не найдена'}
+            else:
+                result = {'Operation': f'Выбрать из справочника "{dict_name}"',
+                          'dateTimeOperation': datetime.datetime.now(),
+                          'result': 'Failed', 'comment': f'Значение "{text_to_find}" в строке не найдено'}
+        else:
+            result = {'Operation': f'Выбрать из справочника "{dict_name}"',
+                      'dateTimeOperation': datetime.datetime.now(),
+                      'result': 'Failed', 'comment': f'Кнопка "{dict_button_name}" не найдена'}
+        return result
